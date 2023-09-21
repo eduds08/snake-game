@@ -49,7 +49,7 @@ class Snake:
             # Check if the snake's head hit its body
             if head == self.body[c]:
                 return False
-            # Also moves the body (so we don't need to make another for loop just for it)
+            # Also moves the body (so we don't need to make another for-loop just for it)
             self.move_body(c, c-1)
 
         # If it runs this line, the snake is still alive

@@ -9,22 +9,16 @@ from Constants import *
 
 def render():
     # Draws all objects into the screen
+    screen.fill(BLACK)
+
+    screen.blit(score_text.text_surface, score_text.text_rect)
+    screen.blit(line_text.text_surface, line_text.text_rect)
+    screen.blit(record_text.text_surface, record_text.text_rect)
+
     if snake_alive:
-        screen.fill(BLACK)
-
-        screen.blit(score_text.text_surface, score_text.text_rect)
-        screen.blit(line_text.text_surface, line_text.text_rect)
-        screen.blit(record_text.text_surface, record_text.text_rect)
-
         snake.draw_into_surface(screen, GREEN)
         apple.draw_into_surface(screen)
     else:
-        screen.fill(BLACK)
-
-        screen.blit(score_text.text_surface, score_text.text_rect)
-        screen.blit(line_text.text_surface, line_text.text_rect)
-        screen.blit(record_text.text_surface, record_text.text_rect)
-
         snake.draw_into_surface(screen, WHITE)
 
 
@@ -35,7 +29,6 @@ if path.exists():
     player_record_score = json.loads(content)
 else:
     player_record_score = 0
-
 
 ### Control Flags ###
 game_open = True
