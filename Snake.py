@@ -9,6 +9,10 @@ class Snake:
                      (SNAKE_FIRST_X_POSITION - OBJECT_SIZE * 2, SNAKE_FIRST_Y_POSITION)]
         self.direction = RIGHT
 
+        self.image = pygame.image.load(
+            "snake_img.png").subsurface(32, 0, 32, 32)
+        self.image.set_alpha(128)
+
     def collide(self, apple):
         head = self.body[0]
         head_rect = pygame.rect.Rect(
@@ -57,12 +61,19 @@ class Snake:
 
     def draw_into_surface(self, surface, color):
         # Iterates over all snake body (including head)
-        for square in self.body:
-            # Make each body position a pygame rect
-            snake_body = pygame.Rect(
-                square[0], square[1], OBJECT_SIZE, OBJECT_SIZE)
-            # Draw the rect into the surface (in this case, the surface is the main screen)
-            pygame.draw.rect(surface, color, snake_body)
+        for c in range(0, len(self.body)):
+
+            if c == 0:
+                self.r = self.image.get_rect().move(
+                    self.body[c][0], self.body[c][1])
+                pygame.draw.rect(surface, color, self.r)
+
+            else:
+                # Make each body position a pygame rect
+                snake_body = pygame.Rect(
+                    self.body[c][0], self.body[c][1], OBJECT_SIZE, OBJECT_SIZE)
+                # Draw the rect into the surface (in this case, the surface is the main screen)
+                pygame.draw.rect(surface, color, snake_body)
 
     def increase_body(self):
         # Add 1 position to the body when the snake eats an apple
