@@ -22,13 +22,16 @@ def render():
         snake.draw_into_surface(screen, WHITE)
 
 
-path = Path('data/score.json')
+path = Path('data')
 
 if path.exists():
+    path = Path('data/score.json')
     content = path.read_text()
     player_record_score = json.loads(content)
 else:
     player_record_score = 0
+    path.mkdir()
+    path = Path('data/score.json')
 
 ### Control Flags ###
 game_open = True
