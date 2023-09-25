@@ -3,15 +3,17 @@ from Constants import *
 
 
 class Snake:
-    def __init__(self):
+    def __init__(self, screen):
         # Set the first position of the snake and its direction
         self.body = [(SNAKE_FIRST_X_POSITION, SNAKE_FIRST_Y_POSITION), (SNAKE_FIRST_X_POSITION - OBJECT_SIZE, SNAKE_FIRST_Y_POSITION),
                      (SNAKE_FIRST_X_POSITION - OBJECT_SIZE * 2, SNAKE_FIRST_Y_POSITION)]
         self.direction = RIGHT
 
-        self.image = pygame.image.load(
-            "snake_img.png").subsurface(32, 0, 32, 32)
-        self.image.set_alpha(128)
+        self.screen = screen
+
+        self.head_image = pygame.image.load('./snake_head.png').convert()
+        self.body_image = pygame.image.load('./snake_body.png').convert()
+        self.tail_image = pygame.image.load('./snake_tail.png').convert()
 
     def collide(self, apple):
         head = self.body[0]
@@ -40,6 +42,10 @@ class Snake:
         # Set each body position to the previous one (eg.: body[4] is set to the position of body[3])
         self.body[current_position] = self.body[previous_position]
 
+    def move_body_aux(self):
+        for c in range(len(self.body) - 1, 0, -1):
+            self.move_body(c, c-1)
+
     def is_alive(self):
         # Snake's head (First list position)
         head = self.body[0]
@@ -54,27 +60,25 @@ class Snake:
             if head == self.body[c]:
                 return False
             # Also moves the body (so we don't need to make another for-loop just for it)
-            self.move_body(c, c-1)
 
         # If it runs this line, the snake is still alive
         return True
 
-    def draw_into_surface(self, surface, color):
-        # Iterates over all snake body (including head)
-        for c in range(0, len(self.body)):
-
-            if c == 0:
-                self.r = self.image.get_rect().move(
-                    self.body[c][0], self.body[c][1])
-                pygame.draw.rect(surface, color, self.r)
-
-            else:
-                # Make each body position a pygame rect
-                snake_body = pygame.Rect(
-                    self.body[c][0], self.body[c][1], OBJECT_SIZE, OBJECT_SIZE)
-                # Draw the rect into the surface (in this case, the surface is the main screen)
-                pygame.draw.rect(surface, color, snake_body)
-
     def increase_body(self):
         # Add 1 position to the body when the snake eats an apple
-        self.body.append((0, 0))
+        self.body.append((self.body[-1][0], self.body[-1][1]))
+
+    def blitme(self):
+
+        head_rect = pygame.Rect(
+            self.body[0][0], self.body[0][1], OBJECT_SIZE, OBJECT_SIZE)
+        self.screen.blit(self.head_image, head_rect)
+
+        for c in range(1, len(self.body) - 1):
+            body_rect = pygame.Rect(
+                self.body[c][0], self.body[c][1], OBJECT_SIZE, OBJECT_SIZE)
+            self.screen.blit(self.body_image, body_rect)
+
+        tail_rect = pygame.Rect(
+            self.body[-1][0], self.body[-1][1], OBJECT_SIZE, OBJECT_SIZE)
+        self.screen.blit(self.tail_image, tail_rect)

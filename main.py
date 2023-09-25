@@ -17,12 +17,13 @@ def render():
 
     if snake_alive:
         # pygame.Surface.blit(snake.image, screen, (128, 128))
-
-        snake.draw_into_surface(screen, GREEN)
-        screen.blit(snake.image, snake.r)
-        apple.draw_into_surface(screen)
-    else:
-        snake.draw_into_surface(screen, WHITE)
+        snake.blitme()
+        # snake.draw_into_surface(screen, GREEN)
+        # screen.blit(snake.image, snake.r)
+        # apple.draw_into_surface(screen)
+        apple.blitme()
+    # else:
+        # snake.draw_into_surface(screen, WHITE)
 
 
 path = Path('data')
@@ -51,16 +52,17 @@ pygame.mixer.music.set_volume(0.2)
 pygame.mixer.music.load('sounds/eat_apple.wav')
 clock = pygame.time.Clock()
 
+### Create the screen (main surface) ###
+screen = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE))
+pygame.display.set_caption("Snake Game")
+
 ### Instantiate game objects ###
-snake = Snake()
-apple = Apple()
+snake = Snake(screen)
+apple = Apple(screen)
 score_text = Font(f'Score: {player_score}', SCORE_POSITION)
 line_text = Font('-'*86, LINE_POSITION)
 record_text = Font(f'Record: {player_record_score}', RECORD_POSITION)
 
-### Create the screen (main surface) ###
-screen = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE))
-pygame.display.set_caption("Snake Game")
 
 # Main loop
 while game_open and snake_alive:
@@ -87,6 +89,8 @@ while game_open and snake_alive:
 
     if key_delay_flag:
         key_delay_flag = not key_delay_flag
+
+    snake.move_body_aux()
 
     # Moves the snake
     snake.move_head()

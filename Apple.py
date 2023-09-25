@@ -4,7 +4,11 @@ from Constants import *
 
 
 class Apple:
-    def __init__(self):
+    def __init__(self, screen):
+        self.screen = screen
+
+        self.image = pygame.image.load('./apple.png').convert()
+
         self.position = self.generate_random_position()
 
     def generate_random_position(self):
@@ -28,8 +32,7 @@ class Apple:
         # Called when the snake eats an apple
         self.position = self.generate_random_position()
 
-    def draw_into_surface(self, surface):
-        # Make the apple a pygame rect and draw into the surface (the surface is the main screen)
-        apple_skin = pygame.Rect(
+    def blitme(self):
+        apple_rect = pygame.Rect(
             self.position[0], self.position[1], OBJECT_SIZE, OBJECT_SIZE)
-        pygame.draw.rect(surface, RED, apple_skin)
+        self.screen.blit(self.image, apple_rect)
