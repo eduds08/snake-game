@@ -74,13 +74,13 @@ while game_open and snake_alive:
 
         # Snake inputs
         elif event.type == pygame.KEYDOWN and not key_delay_flag:
-            if event.key == pygame.K_UP and snake.direction != DOWN:
+            if event.key == pygame.K_UP and snake.directions[0] != DOWN:
                 snake.set_direction(UP)
-            if event.key == pygame.K_RIGHT and snake.direction != LEFT:
+            if event.key == pygame.K_RIGHT and snake.directions[0] != LEFT:
                 snake.set_direction(RIGHT)
-            if event.key == pygame.K_DOWN and snake.direction != UP:
+            if event.key == pygame.K_DOWN and snake.directions[0] != UP:
                 snake.set_direction(DOWN)
-            if event.key == pygame.K_LEFT and snake.direction != RIGHT:
+            if event.key == pygame.K_LEFT and snake.directions[0] != RIGHT:
                 snake.set_direction(LEFT)
             key_delay_flag = not key_delay_flag
 
