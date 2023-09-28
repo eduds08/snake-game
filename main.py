@@ -21,7 +21,7 @@ def render():
         # snake.draw_into_surface(screen, GREEN)
         # screen.blit(snake.image, snake.r)
         # apple.draw_into_surface(screen)
-        apple.blitme()
+        apple.render()
     # else:
         # snake.draw_into_surface(screen, WHITE)
 
@@ -101,11 +101,11 @@ while game_open and snake_alive:
         pygame.mixer.music.play()
         player_score += 1
         score_text.update_text(f'Score: {player_score}')
-        apple.update_position()
+        apple.update()
         # This for loop makes sure that the new apple doesn't spawn on a position occupied by the snake
         for c in range(0, len(snake.body)):
             if apple.position == list(snake.body[c]):
-                apple.update_position()
+                apple.update()
                 c = 0
 
     # Checks if the snake is alive and also moves its body (excluding the head)

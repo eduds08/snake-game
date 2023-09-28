@@ -7,9 +7,6 @@ class Snake:
         # Set the first position of the snake and its direction
         self.body = [(SNAKE_FIRST_X_POSITION, SNAKE_FIRST_Y_POSITION), (SNAKE_FIRST_X_POSITION - OBJECT_SIZE, SNAKE_FIRST_Y_POSITION),
                      (SNAKE_FIRST_X_POSITION - OBJECT_SIZE * 2, SNAKE_FIRST_Y_POSITION)]
-        
-        #self.head_direction = RIGHT
-        #self.previous_head_direction = RIGHT
 
         self.directions = [RIGHT, RIGHT, RIGHT]
         self.previous_directions = [RIGHT, RIGHT, RIGHT]
@@ -29,68 +26,92 @@ class Snake:
         apple_rect = pygame.rect.Rect(
             apple[0], apple[1], OBJECT_SIZE, OBJECT_SIZE)
         return head_rect.colliderect(apple_rect)
-    
+
     def update_image(self, img_name, pos):
         if self.directions[pos] == RIGHT:
             if self.previous_directions[pos] == UP:
                 if img_name == 'HEAD':
-                    self.head_image = pygame.transform.rotate(self.head_image, -90)
+                    self.head_image = pygame.transform.rotate(
+                        self.head_image, -90)
                 if img_name == 'BODY':
-                    self.body_image = pygame.transform.rotate(self.body_image, 90)
+                    self.body_image = pygame.transform.rotate(
+                        self.body_image, 90)
                 if img_name == 'TAIL':
-                    self.tail_image = pygame.transform.rotate(self.tail_image, 90) 
+                    self.tail_image = pygame.transform.rotate(
+                        self.tail_image, 90)
             elif self.previous_directions[pos] == DOWN:
                 if img_name == 'HEAD':
-                    self.head_image = pygame.transform.rotate(self.head_image, 90)
+                    self.head_image = pygame.transform.rotate(
+                        self.head_image, 90)
                 if img_name == 'BODY':
-                    self.body_image = pygame.transform.rotate(self.body_image, -90)
+                    self.body_image = pygame.transform.rotate(
+                        self.body_image, -90)
                 if img_name == 'TAIL':
-                    self.tail_image = pygame.transform.rotate(self.tail_image, -90)
+                    self.tail_image = pygame.transform.rotate(
+                        self.tail_image, -90)
         elif self.directions[pos] == LEFT:
             if self.previous_directions[pos] == UP:
                 if img_name == 'HEAD':
-                    self.head_image = pygame.transform.rotate(self.head_image, 90)
+                    self.head_image = pygame.transform.rotate(
+                        self.head_image, 90)
                 if img_name == 'BODY':
-                    self.body_image = pygame.transform.rotate(self.body_image, -90)
+                    self.body_image = pygame.transform.rotate(
+                        self.body_image, -90)
                 if img_name == 'TAIL':
-                    self.tail_image = pygame.transform.rotate(self.tail_image, -90)
+                    self.tail_image = pygame.transform.rotate(
+                        self.tail_image, -90)
             elif self.previous_directions[pos] == DOWN:
                 if img_name == 'HEAD':
-                    self.head_image = pygame.transform.rotate(self.head_image, -90)
+                    self.head_image = pygame.transform.rotate(
+                        self.head_image, -90)
                 if img_name == 'BODY':
-                    self.body_image = pygame.transform.rotate(self.body_image, 90)
+                    self.body_image = pygame.transform.rotate(
+                        self.body_image, 90)
                 if img_name == 'TAIL':
-                    self.tail_image = pygame.transform.rotate(self.tail_image, 90)
+                    self.tail_image = pygame.transform.rotate(
+                        self.tail_image, 90)
         elif self.directions[pos] == UP:
             if self.previous_directions[pos] == RIGHT:
                 if img_name == 'HEAD':
-                    self.head_image = pygame.transform.rotate(self.head_image, 90)
+                    self.head_image = pygame.transform.rotate(
+                        self.head_image, 90)
                 if img_name == 'BODY':
-                    self.body_image = pygame.transform.rotate(self.body_image, -90)
+                    self.body_image = pygame.transform.rotate(
+                        self.body_image, -90)
                 if img_name == 'TAIL':
-                    self.tail_image = pygame.transform.rotate(self.tail_image, -90)
+                    self.tail_image = pygame.transform.rotate(
+                        self.tail_image, -90)
             elif self.previous_directions[pos] == LEFT:
                 if img_name == 'HEAD':
-                    self.head_image = pygame.transform.rotate(self.head_image, -90)
+                    self.head_image = pygame.transform.rotate(
+                        self.head_image, -90)
                 if img_name == 'BODY':
-                    self.body_image = pygame.transform.rotate(self.body_image, 90)
+                    self.body_image = pygame.transform.rotate(
+                        self.body_image, 90)
                 if img_name == 'TAIL':
-                    self.tail_image = pygame.transform.rotate(self.tail_image, 90)
+                    self.tail_image = pygame.transform.rotate(
+                        self.tail_image, 90)
         elif self.directions[pos] == DOWN:
             if self.previous_directions[pos] == RIGHT:
                 if img_name == 'HEAD':
-                    self.head_image = pygame.transform.rotate(self.head_image, -90)
+                    self.head_image = pygame.transform.rotate(
+                        self.head_image, -90)
                 if img_name == 'BODY':
-                    self.body_image = pygame.transform.rotate(self.body_image, 90)
+                    self.body_image = pygame.transform.rotate(
+                        self.body_image, 90)
                 if img_name == 'TAIL':
-                    self.tail_image = pygame.transform.rotate(self.tail_image, 90)
+                    self.tail_image = pygame.transform.rotate(
+                        self.tail_image, 90)
             elif self.previous_directions[pos] == LEFT:
                 if img_name == 'HEAD':
-                    self.head_image = pygame.transform.rotate(self.head_image, 90)
+                    self.head_image = pygame.transform.rotate(
+                        self.head_image, 90)
                 if img_name == 'BODY':
-                    self.body_image = pygame.transform.rotate(self.body_image, -90)
+                    self.body_image = pygame.transform.rotate(
+                        self.body_image, -90)
                 if img_name == 'TAIL':
-                    self.tail_image = pygame.transform.rotate(self.tail_image, -90)
+                    self.tail_image = pygame.transform.rotate(
+                        self.tail_image, -90)
 
     def set_direction(self, direction):
         # Just updates the snake's direction
@@ -98,27 +119,6 @@ class Snake:
         self.directions[0] = direction
 
         self.update_image('HEAD', 0)
-
-        # if self.directions[0] == RIGHT:
-        #     if self.previous_directions[0] == UP:
-        #         self.head_image = pygame.transform.rotate(self.head_image, -90)
-        #     elif self.previous_directions[0] == DOWN:
-        #         self.head_image = pygame.transform.rotate(self.head_image, 90)
-        # elif self.directions[0] == LEFT:
-        #     if self.previous_directions[0] == UP:
-        #         self.head_image = pygame.transform.rotate(self.head_image, 90)
-        #     elif self.previous_directions[0] == DOWN:
-        #         self.head_image = pygame.transform.rotate(self.head_image, -90)
-        # elif self.directions[0] == UP:
-        #     if self.previous_directions[0] == RIGHT:
-        #         self.head_image = pygame.transform.rotate(self.head_image, 90)
-        #     elif self.previous_directions[0] == LEFT:
-        #         self.head_image = pygame.transform.rotate(self.head_image, -90)
-        # elif self.directions[0] == DOWN:
-        #     if self.previous_directions[0] == RIGHT:
-        #         self.head_image = pygame.transform.rotate(self.head_image, -90)
-        #     elif self.previous_directions[0] == LEFT:
-        #         self.head_image = pygame.transform.rotate(self.head_image, 90)
 
     def move_head(self):
         # Moves the snake's head according to its direction
