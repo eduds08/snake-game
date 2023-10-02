@@ -7,21 +7,12 @@ class Snake:
         # Set the first position of the snake and its direction
         self.__body = [(SNAKE_FIRST_X_POSITION, SNAKE_FIRST_Y_POSITION), (SNAKE_FIRST_X_POSITION - OBJECT_SIZE, SNAKE_FIRST_Y_POSITION),
                      (SNAKE_FIRST_X_POSITION - OBJECT_SIZE * 2, SNAKE_FIRST_Y_POSITION)]
+        
         self.__head_direction = RIGHT
         self.__screen = screen
-
         self.__is_alive = True
-
         self.__score = 0
 
-        self.collided = False
-
-        self.key_delay_flag = False
-
-    @property
-    def body(self):
-        return self.__body
-    
     @property
     def is_alive(self):
         return self.__is_alive
@@ -67,11 +58,6 @@ class Snake:
             apple.position[0], apple.position[1], OBJECT_SIZE, OBJECT_SIZE)
 
         if head_rect.colliderect(apple_rect):
-            self.collided = True
-        else:
-            self.collided = False
-
-        if (self.collided):
             self.__increase_body()
             pygame.mixer.music.play()
             self.__score += 1
