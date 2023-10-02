@@ -5,13 +5,13 @@ LEFT = 3
 
 FPS = 16
 
-SCREEN_SIZE = 640
+SCREEN_SIZE = 736
 OBJECT_SIZE = 32
 FONT_SIZE = 32
 
-SCORE_POSITION = (10, 15)
+SCORE_POSITION = (10, 24)
 LINE_POSITION = (0, 64)
-RECORD_POSITION = (480, 15)
+RECORD_POSITION = (540, 24)
 
 # The line_text starts at pixel 40 (y-coordinates) and it has size 20. So 60 is where the "game screen" (where snake can run) starts
 SCREEN_BEGIN_Y = LINE_POSITION[1] + FONT_SIZE

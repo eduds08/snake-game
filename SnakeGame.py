@@ -9,6 +9,21 @@ from Constants import *
 
 class SnakeGame:
     def __init__(self):
+        self.__game_open = True
+
+        self.__init_path()
+        self.__init_pygame()
+
+        self.__screen = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE))
+        pygame.display.set_caption("Snake Game")
+        
+        self.__init_game_objects()
+
+        self.__run()
+
+        pygame.quit()
+
+    def __init_path(self):
         if not Path('data').exists():
             Path('data').mkdir()
             Path('data/score.json').touch()
@@ -21,48 +36,32 @@ class SnakeGame:
         self.__path = Path('data/score.json')
         self.__player_high_score = json.loads(self.__path.read_text())
 
-        self.__game_open = True
-
+    def __init_pygame(self):
         pygame.init()
         pygame.mixer.init()
         pygame.mixer.music.set_volume(0.1)
         pygame.mixer.music.load('sounds/eat_apple.wav')
         self.__clock = pygame.time.Clock()
 
-        self.__screen = pygame.display.set_mode((SCREEN_SIZE, SCREEN_SIZE))
-        pygame.display.set_caption("Snake Game")
-
+    def __init_game_objects(self):
         self.__snake = Snake(self.__screen)
         self.__apple = Apple(self.__screen)
         self.__score_text = Font(f'Score: {self.__snake.score}', SCORE_POSITION, self.__screen)
         self.__line_text = Font('-'*86, LINE_POSITION, self.__screen)
         self.__record_text = Font(f'Record: {self.__player_high_score}', RECORD_POSITION, self.__screen)
 
-        self.run()
-
-        pygame.quit()
-
-    def run(self):
+    def __run(self):
         while self.__game_open and self.__snake.is_alive:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.__game_open = False
 
-            # if not self.__game_open:
-            #     break
-
-            self.__snake.update(self.__apple)
-            self.__score_text.update(f'Score: {self.__snake.score}')
-
+            self.__update()
             self.__render()
-
-            pygame.display.flip()
-
+            
             self.__clock.tick(FPS)
 
         if not self.__snake.is_alive:
-            del self.__apple
-
             if self.__snake.score > self.__player_high_score:
                 self.__path.write_text(json.dumps(self.__snake.score))
                 self.__player_high_score = self.__snake.score
@@ -73,15 +72,9 @@ class SnakeGame:
             pygame.mixer.music.play()
 
             while self.__game_open:
-
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         self.__game_open = False
-
-                pygame.display.flip()
-                
-                self.__clock.tick(FPS)
-
     
     def __render(self):
         self.__screen.fill(BLACK)
@@ -94,4 +87,8 @@ class SnakeGame:
             self.__snake.render()
             self.__apple.render()
 
-        #pygame.display.flip()
+        pygame.display.flip()
+
+    def __update(self):
+        self.__snake.update(self.__apple)
+        self.__score_text.update(f'Score: {self.__snake.score}')
