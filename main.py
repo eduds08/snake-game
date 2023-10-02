@@ -11,16 +11,12 @@ def render():
     # Draws all objects into the screen
     screen.fill(BLACK)
 
-    screen.blit(score_text.text_surface, score_text.text_rect)
-    screen.blit(line_text.text_surface, line_text.text_rect)
-    screen.blit(record_text.text_surface, record_text.text_rect)
+    score_text.render()
+    line_text.render()
+    record_text.render()
 
     if snake_alive:
-        # pygame.Surface.blit(snake.image, screen, (128, 128))
-        snake.blitme()
-        # snake.draw_into_surface(screen, GREEN)
-        # screen.blit(snake.image, snake.r)
-        # apple.draw_into_surface(screen)
+        snake.render()
         apple.render()
     # else:
         # snake.draw_into_surface(screen, WHITE)
@@ -42,13 +38,13 @@ else:
 game_open = True
 snake_alive = True
 # The key_delay_flag acts as a "delay" for the input. Without this, if you press 2 keys very quick, only the 2nd input will happen
-key_delay_flag = False
-player_score = 0
+#key_delay_flag = False
+# player_score = 0
 
 ### Initialize PYGAME, PYGAME.MIXER and the PYGAME'S CLOCK ###
 pygame.init()
 pygame.mixer.init()
-pygame.mixer.music.set_volume(0.2)
+pygame.mixer.music.set_volume(0.1)
 pygame.mixer.music.load('sounds/eat_apple.wav')
 clock = pygame.time.Clock()
 
@@ -59,9 +55,9 @@ pygame.display.set_caption("Snake Game")
 ### Instantiate game objects ###
 snake = Snake(screen)
 apple = Apple(screen)
-score_text = Font(f'Score: {player_score}', SCORE_POSITION)
-line_text = Font('-'*86, LINE_POSITION)
-record_text = Font(f'Record: {player_record_score}', RECORD_POSITION)
+score_text = Font(f'Score: {snake.score}', SCORE_POSITION, screen)
+line_text = Font('-'*86, LINE_POSITION, screen)
+record_text = Font(f'Record: {player_record_score}', RECORD_POSITION, screen)
 
 
 # Main loop
@@ -72,44 +68,14 @@ while game_open and snake_alive:
         if event.type == pygame.QUIT:
             game_open = False
 
-        # Snake inputs
-        elif event.type == pygame.KEYDOWN and not key_delay_flag:
-            if event.key == pygame.K_UP and snake.directions[0] != DOWN:
-                snake.set_direction(UP)
-            if event.key == pygame.K_RIGHT and snake.directions[0] != LEFT:
-                snake.set_direction(RIGHT)
-            if event.key == pygame.K_DOWN and snake.directions[0] != UP:
-                snake.set_direction(DOWN)
-            if event.key == pygame.K_LEFT and snake.directions[0] != RIGHT:
-                snake.set_direction(LEFT)
-            key_delay_flag = not key_delay_flag
-
     if not game_open:
         break
 
-    if key_delay_flag:
-        key_delay_flag = not key_delay_flag
+    snake.update(apple)
 
-    snake.move_body_aux()
+    score_text.update(f'Score: {snake.score}')
 
-    # Moves the snake
-    snake.move_head()
-
-    # Checks if the snake ate the apple
-    if snake.collide(apple.position):
-        snake.increase_body()
-        pygame.mixer.music.play()
-        player_score += 1
-        score_text.update_text(f'Score: {player_score}')
-        apple.update()
-        # This for loop makes sure that the new apple doesn't spawn on a position occupied by the snake
-        for c in range(0, len(snake.body)):
-            if apple.position == list(snake.body[c]):
-                apple.update()
-                c = 0
-
-    # Checks if the snake is alive and also moves its body (excluding the head)
-    snake_alive = snake.is_alive()
+    snake_alive = snake.is_alive
 
     # Draw stuff into the screen
     render()
@@ -123,10 +89,10 @@ while game_open and snake_alive:
 if not snake_alive:
     del apple
 
-    if player_score > player_record_score or player_record_score == 0:
-        content = json.dumps(player_score)
+    if snake.score > player_record_score or player_record_score == 0:
+        content = json.dumps(snake.score)
         path.write_text(content)
-        player_record_score = player_score
+        player_record_score = snake.score
 
     render()
 

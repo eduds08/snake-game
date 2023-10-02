@@ -6,16 +6,19 @@ from Constants import *
 class Apple:
     def __init__(self, screen):
         self.__screen = screen
-        self.__image = pygame.image.load('./apple.png').convert()
-        self.position = self.__generate_random_position()
+        self.__position = self.__generate_random_position()
 
     def update(self):
-        self.position = self.__generate_random_position()
+        self.__position = self.__generate_random_position()
 
     def render(self):
         apple_rect = pygame.Rect(
-            self.position[0], self.position[1], OBJECT_SIZE, OBJECT_SIZE)
-        self.__screen.blit(self.__image, apple_rect)
+            self.__position[0], self.__position[1], OBJECT_SIZE, OBJECT_SIZE)
+        pygame.draw.rect(self.__screen, RED, apple_rect)
+
+    @property
+    def position(self):
+        return self.__position
 
     def __generate_random_position(self):
         # Generates a random position for the apple (valid position constrained to the screen borders)
@@ -32,4 +35,6 @@ class Apple:
         while new_position[1] % OBJECT_SIZE != 0:
             new_position[1] += 2
 
-        return new_position
+        new_position_tuple = (new_position[0], new_position[1])
+
+        return new_position_tuple

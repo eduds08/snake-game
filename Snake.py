@@ -5,181 +5,102 @@ from Constants import *
 class Snake:
     def __init__(self, screen):
         # Set the first position of the snake and its direction
-        self.body = [(SNAKE_FIRST_X_POSITION, SNAKE_FIRST_Y_POSITION), (SNAKE_FIRST_X_POSITION - OBJECT_SIZE, SNAKE_FIRST_Y_POSITION),
+        self.__body = [(SNAKE_FIRST_X_POSITION, SNAKE_FIRST_Y_POSITION), (SNAKE_FIRST_X_POSITION - OBJECT_SIZE, SNAKE_FIRST_Y_POSITION),
                      (SNAKE_FIRST_X_POSITION - OBJECT_SIZE * 2, SNAKE_FIRST_Y_POSITION)]
+        self.__head_direction = RIGHT
+        self.__screen = screen
 
-        self.directions = [RIGHT, RIGHT, RIGHT]
-        self.previous_directions = [RIGHT, RIGHT, RIGHT]
+        self.__is_alive = True
 
-        self.screen = screen
+        self.__score = 0
 
-        self.head_image = pygame.image.load('./snake_head.png').convert()
-        self.body_image = pygame.image.load('./snake_body.png').convert()
-        self.tail_image = pygame.image.load('./snake_tail.png').convert()
+        self.collided = False
 
-        self.head_image = pygame.transform.rotate(self.head_image, -90)
+        self.key_delay_flag = False
 
-    def collide(self, apple):
-        head = self.body[0]
+    @property
+    def body(self):
+        return self.__body
+    
+    @property
+    def is_alive(self):
+        return self.__is_alive
+    
+    @property
+    def score(self):
+        return self.__score
+
+    def update(self, apple):
+        self.__update_movement()
+        self.__update_collision(apple)
+        self.__update_is_alive()
+
+    def __update_movement(self):
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_UP] and self.__head_direction != DOWN:
+            self.__head_direction = UP
+        if keys[pygame.K_RIGHT] and self.__head_direction != LEFT:
+            self.__head_direction = RIGHT
+        if keys[pygame.K_DOWN] and self.__head_direction != UP:
+            self.__head_direction = DOWN
+        if keys[pygame.K_LEFT] and self.__head_direction != RIGHT:
+            self.__head_direction = LEFT
+
+        for c in range(len(self.__body) -1, 0, -1):
+            self.__body[c] = self.__body[c-1]
+
+        if self.__head_direction == UP:
+            self.__body[0] = (self.__body[0][0], self.__body[0][1] - OBJECT_SIZE)
+        if self.__head_direction == RIGHT:
+            self.__body[0] = (self.__body[0][0] + OBJECT_SIZE, self.__body[0][1])
+        if self.__head_direction == DOWN:
+            self.__body[0] = (self.__body[0][0], self.__body[0][1] + OBJECT_SIZE)
+        if self.__head_direction == LEFT:
+            self.__body[0] = (self.__body[0][0] - OBJECT_SIZE, self.__body[0][1])
+
+    def __update_collision(self, apple):
+        head = self.__body[0]
         head_rect = pygame.rect.Rect(
             head[0], head[1], OBJECT_SIZE, OBJECT_SIZE)
         apple_rect = pygame.rect.Rect(
-            apple[0], apple[1], OBJECT_SIZE, OBJECT_SIZE)
-        return head_rect.colliderect(apple_rect)
+            apple.position[0], apple.position[1], OBJECT_SIZE, OBJECT_SIZE)
 
-    def update_image(self, img_name, pos):
-        if self.directions[pos] == RIGHT:
-            if self.previous_directions[pos] == UP:
-                if img_name == 'HEAD':
-                    self.head_image = pygame.transform.rotate(
-                        self.head_image, -90)
-                if img_name == 'BODY':
-                    self.body_image = pygame.transform.rotate(
-                        self.body_image, 90)
-                if img_name == 'TAIL':
-                    self.tail_image = pygame.transform.rotate(
-                        self.tail_image, 90)
-            elif self.previous_directions[pos] == DOWN:
-                if img_name == 'HEAD':
-                    self.head_image = pygame.transform.rotate(
-                        self.head_image, 90)
-                if img_name == 'BODY':
-                    self.body_image = pygame.transform.rotate(
-                        self.body_image, -90)
-                if img_name == 'TAIL':
-                    self.tail_image = pygame.transform.rotate(
-                        self.tail_image, -90)
-        elif self.directions[pos] == LEFT:
-            if self.previous_directions[pos] == UP:
-                if img_name == 'HEAD':
-                    self.head_image = pygame.transform.rotate(
-                        self.head_image, 90)
-                if img_name == 'BODY':
-                    self.body_image = pygame.transform.rotate(
-                        self.body_image, -90)
-                if img_name == 'TAIL':
-                    self.tail_image = pygame.transform.rotate(
-                        self.tail_image, -90)
-            elif self.previous_directions[pos] == DOWN:
-                if img_name == 'HEAD':
-                    self.head_image = pygame.transform.rotate(
-                        self.head_image, -90)
-                if img_name == 'BODY':
-                    self.body_image = pygame.transform.rotate(
-                        self.body_image, 90)
-                if img_name == 'TAIL':
-                    self.tail_image = pygame.transform.rotate(
-                        self.tail_image, 90)
-        elif self.directions[pos] == UP:
-            if self.previous_directions[pos] == RIGHT:
-                if img_name == 'HEAD':
-                    self.head_image = pygame.transform.rotate(
-                        self.head_image, 90)
-                if img_name == 'BODY':
-                    self.body_image = pygame.transform.rotate(
-                        self.body_image, -90)
-                if img_name == 'TAIL':
-                    self.tail_image = pygame.transform.rotate(
-                        self.tail_image, -90)
-            elif self.previous_directions[pos] == LEFT:
-                if img_name == 'HEAD':
-                    self.head_image = pygame.transform.rotate(
-                        self.head_image, -90)
-                if img_name == 'BODY':
-                    self.body_image = pygame.transform.rotate(
-                        self.body_image, 90)
-                if img_name == 'TAIL':
-                    self.tail_image = pygame.transform.rotate(
-                        self.tail_image, 90)
-        elif self.directions[pos] == DOWN:
-            if self.previous_directions[pos] == RIGHT:
-                if img_name == 'HEAD':
-                    self.head_image = pygame.transform.rotate(
-                        self.head_image, -90)
-                if img_name == 'BODY':
-                    self.body_image = pygame.transform.rotate(
-                        self.body_image, 90)
-                if img_name == 'TAIL':
-                    self.tail_image = pygame.transform.rotate(
-                        self.tail_image, 90)
-            elif self.previous_directions[pos] == LEFT:
-                if img_name == 'HEAD':
-                    self.head_image = pygame.transform.rotate(
-                        self.head_image, 90)
-                if img_name == 'BODY':
-                    self.body_image = pygame.transform.rotate(
-                        self.body_image, -90)
-                if img_name == 'TAIL':
-                    self.tail_image = pygame.transform.rotate(
-                        self.tail_image, -90)
+        if head_rect.colliderect(apple_rect):
+            self.collided = True
+        else:
+            self.collided = False
 
-    def set_direction(self, direction):
-        # Just updates the snake's direction
-        self.previous_directions[0] = self.directions[0]
-        self.directions[0] = direction
+        if (self.collided):
+            self.__increase_body()
+            pygame.mixer.music.play()
+            self.__score += 1
+            apple.update()
+            for c in range(0, len(self.__body)):
+                if apple.position == self.__body[c]:
+                    apple.update()
+                    c = 0
 
-        self.update_image('HEAD', 0)
-
-    def move_head(self):
-        # Moves the snake's head according to its direction
-        if self.directions[0] == UP:
-            self.body[0] = (self.body[0][0], self.body[0][1] - OBJECT_SIZE)
-        if self.directions[0] == RIGHT:
-            self.body[0] = (self.body[0][0] + OBJECT_SIZE, self.body[0][1])
-        if self.directions[0] == DOWN:
-            self.body[0] = (self.body[0][0], self.body[0][1] + OBJECT_SIZE)
-        if self.directions[0] == LEFT:
-            self.body[0] = (self.body[0][0] - OBJECT_SIZE, self.body[0][1])
-
-    def move_body(self, current_position, previous_position):
-
-        self.previous_directions[current_position] = self.directions[current_position]
-        self.directions[current_position] = self.directions[previous_position]
-
-        self.body[current_position] = self.body[previous_position]
-
-    def move_body_aux(self):
-
-        for c in range(len(self.body) - 1, 0, -1):
-            self.move_body(c, c-1)
-
-    def is_alive(self):
+    def __update_is_alive(self):
         # Snake's head (First list position)
-        head = self.body[0]
+        snake_head = self.__body[0]
 
         # Checks if the snake's head hit the screen borders (top border is the dashed line -> "---")
-        if head[0] < 0 or head[0] > SCREEN_SIZE - OBJECT_SIZE or head[1] < SCREEN_BEGIN_Y or head[1] > SCREEN_SIZE - OBJECT_SIZE:
-            return False
+        if snake_head[0] < 0 or snake_head[0] > SCREEN_SIZE - OBJECT_SIZE or snake_head[1] < SCREEN_BEGIN_Y or snake_head[1] > SCREEN_SIZE - OBJECT_SIZE:
+            self.__is_alive = False
 
         # Iterates over the whole body, excluding the head
-        for c in range(len(self.body) - 1, 0, -1):
+        for c in range(len(self.__body) - 1, 0, -1):
             # Check if the snake's head hit its body
-            if head == self.body[c]:
-                return False
+            if snake_head == self.__body[c]:
+                self.__is_alive = False
             # Also moves the body (so we don't need to make another for-loop just for it)
 
-        # If it runs this line, the snake is still alive
-        return True
-
-    def increase_body(self):
+    def __increase_body(self):
         # Add 1 position to the body when the snake eats an apple
-        self.body.append((self.body[-1][0], self.body[-1][1]))
-        self.directions.append(RIGHT)
-        self.previous_directions.append(RIGHT)
+        self.__body.append((self.__body[-1][0], self.__body[-1][1]))
 
-    def blitme(self):
-
-        head_rect = pygame.Rect(
-            self.body[0][0], self.body[0][1], OBJECT_SIZE, OBJECT_SIZE)
-        self.screen.blit(self.head_image, head_rect)
-
-        for c in range(1, len(self.body) - 1):
-            self.update_image('BODY', c)
-            body_rect = pygame.Rect(
-                self.body[c][0], self.body[c][1], OBJECT_SIZE, OBJECT_SIZE)
-            self.screen.blit(self.body_image, body_rect)
-
-        self.update_image('TAIL', -1)
-        tail_rect = pygame.Rect(
-            self.body[-1][0], self.body[-1][1], OBJECT_SIZE, OBJECT_SIZE)
-        self.screen.blit(self.tail_image, tail_rect)
+    def render(self):
+        for body_rect in self.__body:
+            rect = pygame.Rect(body_rect[0], body_rect[1], OBJECT_SIZE, OBJECT_SIZE)
+            pygame.draw.rect(self.__screen, GREEN, rect)
